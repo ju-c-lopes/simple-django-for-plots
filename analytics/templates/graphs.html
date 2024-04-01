@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gráficos para análise{% endblock %}
+
+{% block content %}
+<style>
+    fieldset {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px rgba(0, 0, 0, .2) solid;
+        border-radius: 0.7em;
+    }
+    .primeira-coluna,
+    .segunda-coluna,
+    .terceira-coluna {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 30%;
+        margin: 0 3vw 0 3vw;
+        padding: 2vh 0 2vh 0;
+        border: 1px rgba(0, 0, 0, .3) solid;
+        border-radius: 0.4em;
+    }
+    .terceira-coluna input {
+        margin-bottom: 10px;
+    }
+    .terceira-coluna div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 80%;
+        margin-bottom: 10px;
+    }
+    .terceira-coluna div div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .alunos-select {
+        display: flex;
+        align-items: center;
+    }
+    label {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding-bottom: 10px;
+        margin: 0 auto 0 auto;
+        width: 100%;
+    }
+    select {
+        appearance: none;
+        background-color: transparent;
+        border: 1px rgba(0, 0, 0, .1) solid;
+        border-radius: 0.35em;
+        padding: 0 1em 0 0;
+        cursor: pointer;
+        line-height: 1.1 !important;
+        outline: none;
+        height: 10vh;
+    }
+    option, option::selection, option:focus {
+        color: #6c6c6c;
+        outline: none;
+        /* border: 1px rgba(0, 0, 0, .1) dashed; */
+        border: none;
+        cursor: pointer;
+        overflow-y: hidden;
+    }
+    .button-select {
+        border: none;
+        background: none;
+        height: 5vh;
+        outline: none;
+        padding: 0;
+    }
+    .button-select img {
+        border-radius: 0 50% 50% 0;
+        position: relative;
+        height: 5vh;
+        opacity: 0.3;
+        padding: 0;
+    }
+    input[type="range"], input[type="range"]::-webkit-slider-runnable-track {
+        outline: none;
+        accent-color: #6f6f6f;
+    }
+    span {
+        margin-bottom: 5px;
+    }
+</style>
+<div>
+    <form action="">
+        <fieldset>
+            <div class="primeira-coluna">
+                <label for="alunos">
+                    Selecione os alunos
+                </label>
+                <div class="alunos-select">
+                    <select name="alunos" id="alunos" multiple>
+                        <option selected disabled>Selecione uma ou mais opções</option>
+                        <option value="all">Todos os alunos</option>
+                        {% for aluno in alunos %}
+                        <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="button-select" type="submit"><img src="{% static './img/insert.png' %}"></button>
+                </div>
+            </div>
+
+            <div class="segunda-coluna">
+                <label for="notas">Notas</label>
+                <input type="range" name="notas" id="notas" min="0" max="10">
+                <span></span>
+                <script>
+                    var range = document.querySelector("input#notas");
+                    var valueNum = document.querySelector(".segunda-coluna>span");
+                    valueNum.textContent = range.value
+                    range.addEventListener('input', () => {
+                        valueNum.textContent = range.value;
+                    })
+                </script>
+                <button type="submit">Aplicar</button>
+            </div>
+
+            <div class="terceira-coluna">
+                <div>
+                    <div>
+                        <label for="aprovados">Aprovados</label>
+                        <input type="checkbox" name="aprovados" value="Aprovados">
+                    </div>
+                    <div>
+                        <label for="todos">Todos</label>
+                        <input type="checkbox" name="aprovados" value="todos" checked>
+                    </div>
+                </div>
+                <button type="submit">Aplicar</button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{% endblock %}

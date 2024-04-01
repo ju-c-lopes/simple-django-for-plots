@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Aluno{% endblock %}
+
+{% block content %}
+<style>
+    h1, form {
+        margin-left: 20px;
+    }
+    a {
+        color: steelblue;
+        margin-left: 20px;
+        margin-bottom: 50px;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    a:visited {
+        color: steelblue;
+        text-decoration: none;
+    }
+</style>
+<div>
+    <a href="{% url 'home' %}">< Voltar</a>
+    <h1>Registrar aluno(a):</h1>
+    <form action="" method="POST">{% csrf_token %}
+        <label for="nome">Nome do aluno(a):</label>
+        <input type="text" name="nome" id="nome">
+        <button type="submit">Registrar</button>
+    </form>
+</div>
+{% endblock %}

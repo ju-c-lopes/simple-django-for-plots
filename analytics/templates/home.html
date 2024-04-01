@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Consulta alunos{% endblock %}
+
+{% block content %}
+<style>
+    ul {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 30px;
+    }
+    a {
+        color: steelblue;
+        margin-left: 20px;
+        margin-bottom: 50px;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    a:visited {
+        color: steelblue;
+        text-decoration: none;
+    }
+    li {
+        list-style: none;
+        margin-bottom: 20px;
+    }
+    h3 {
+        color: olive;
+        height: 20px;
+    }
+    h1, form, table, h3 {
+        margin-left: 20px;
+    }
+    td {
+        border: 1px #acacac dashed;
+        width: 200px;
+        height: 35px;
+        padding: 5px;
+        text-align: center;
+    }
+    .green {
+        color: green;
+        font-weight: 600;
+    }
+    .red {
+        color: red;
+        font-weight: 600;
+    }
+</style>
+<div>
+    <ul>
+        <li><a href="{% url 'registro' %}">Registrar aluno(a)</a></li>
+        <li><a href="{% url 'notas' %}">Registrar notas</a></li>
+        <li><a href="{% url 'graficos' %}">Gráficos</a></li>
+    </ul>
+    <h1>Consultar Aluno: </h1>
+    <form action="" method="get">{% csrf_token %}
+        <label for="consulta">Consultar aluno(a):</label>
+        <input type="text" name="consulta" id="consulta">
+        <button type="submit">Buscar</button>
+    </form>
+</div>
+<h3>
+{% if messages %}
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+{% endif %}
+</h3>
+
+{% if aluno is not None %}
+<table>
+    <tr>
+        <td>Nome do aluno: </td>
+        <td>{{ aluno.nome }}</td>
+    </tr>
+    <tr rowspan="4">
+        <td>Notas</td>
+        <td>
+            {% for nota in aluno.notas.all %}
+            {{ nota.nota }} | 
+            {% if nota.aprovado %}
+            <span class="green">Aprovado</span><br>
+            {% else %}
+            <span class="red">Reprovado</span><br>
+            {% endif %}
+            {% endfor %}
+        </td>
+    </tr>
+</table>
+{% endif %}
+{% endblock %}

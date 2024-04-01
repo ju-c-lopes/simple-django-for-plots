@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar nota{% endblock %}
+
+{% block content %}
+<style>
+    h1, form {
+        margin-left: 20px;
+    }
+    a {
+        color: steelblue;
+        margin-left: 20px;
+        margin-bottom: 50px;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    a:visited {
+        color: steelblue;
+        text-decoration: none;
+    }
+    form {
+        position: relative;
+        display: flex;
+        width: 35vw;
+        flex-direction: column;
+        align-items: start;
+    }
+    form div {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+    form button {
+        position: relative;
+        margin: 0 auto 0 auto;
+    }
+    label {
+        margin-right: 10px;
+    }
+</style>
+<div>
+    <a href="{% url 'home' %}">< Voltar</a>
+    <h1>Registrar Nota:</h1>
+    <form action="" method="POST">{% csrf_token %}
+        <div>
+            <div>
+                <label for="aluno">Nome do aluno: </label>
+                <select name="aluno" id="aluno">
+                    <option selected disabled>Selecione o aluno(a)</option>
+                    {% for aluno in alunos %}
+                    <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="nota">Registrar nota: </label>
+                <select name="nota" id="nota">
+                    <option selected disabled>Selecione a nota:</option>
+                    {% for i, nota in notas %}
+                    <option value="{{ i }}">{{ nota }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit">Registrar</button>
+    </form>
+</div>
+{% endblock %}
