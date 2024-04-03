@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from analytics.models import Aluno, Prova, possiveis_notas
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import io, base64
 
 # Create your views here.
 
@@ -54,21 +58,47 @@ def registrar_nota(request):
     return render(request, template_name='registro-nota.html', context=context, status=200)
 
 def criar_graficos(request):
+    context = {}
+    notas = None
     selecao_de_alunos = []
     if not request.POST:
         selecao_de_alunos = Aluno.objects.all()
     if request.POST:
+        print(request.POST)
+        print("PRINT REQUEST TODOS", request.POST.get("todos", "não retornou"))
+        
         alunos = request.POST.getlist("alunos")
         if 'all' in alunos:
             selecao_de_alunos = Aluno.objects.all()
         else:
             todos_alunos = Aluno.objects.all()
             for i in range(len(todos_alunos)):
-                for aluno in alunos:
-                    if todos_alunos[i].id == aluno:
+                for id_aluno in alunos:
+                    if todos_alunos[i].id == id_aluno:
                         selecao_de_alunos.append(todos_alunos[i])
-    context = {
-        'alunos': selecao_de_alunos,
-    }
+
+        notas = []
+        for aluno in selecao_de_alunos:
+            print("ALUNO NOTA FIRST: ", aluno.notas.first().nota)
+            notas.append(aluno.notas.first())
+        fig, ax = plt.subplots(figsize=(10, 4))
+        ax.plot(
+            [aluno.nome for aluno in selecao_de_alunos],
+            [nota.nota for nota in notas],
+            '--bo')
+        ax.set_title('Notas de alunos')
+        ax.set_xlabel('Alunos')
+        ax.set_ylabel('Notas')
+        
+        file_io = io.BytesIO()
+        fig.savefig(file_io)
+        b64 = base64.b64encode(file_io.getvalue()).decode()
+        context['chart'] = b64
+        print("INSTANCIADO CHART")
+        #print(context['chart'])
+
+    context['alunos'] = selecao_de_alunos
+
+    print('chart' in context.keys())
 
     return render(request, template_name='graphs.html', context=context, status=200)
