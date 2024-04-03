@@ -6,3 +6,6 @@ This project is a simple record of student grades that return if they were appro
 The purpose is to make some fake datas to render plots, filtering by students, grades, approval, and so on.
 <br><br>
 We're trying to use besides Django, pandas and matplotlib
+<br><br>
+Rendered matplotlib graphic in Django, following this tutorial<br>
+[Rendering MathplotLib in Django](https://spapas.github.io/2021/02/08/django-matplotlib/)
