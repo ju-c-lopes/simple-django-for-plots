@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import io, base64
+import numpy as np
 
 # Create your views here.
 
@@ -12,7 +13,6 @@ def consultar_aluno(request):
     context = None
     aluno = None
     if request.GET:
-        print(request.GET)
         try:
             if request.GET.get('consulta', False):
                 aluno = Aluno.objects.get(nome__contains=request.GET['consulta'])
@@ -36,7 +36,6 @@ def registrar_aluno(request):
     return render(request, template_name='registro-aluno.html', status=200)
 
 def registrar_nota(request):
-    print(request.POST)
     alunos = None
     if request.POST:
         aprovado = int(request.POST.get("nota", 0)) >= 6
@@ -64,9 +63,6 @@ def criar_graficos(request):
     if not request.POST:
         selecao_de_alunos = Aluno.objects.all()
     if request.POST:
-        print(request.POST)
-        print("PRINT REQUEST TODOS", request.POST.get("todos", "não retornou"))
-        
         alunos = request.POST.getlist("alunos")
         if 'all' in alunos:
             selecao_de_alunos = Aluno.objects.all()
@@ -74,31 +70,49 @@ def criar_graficos(request):
             todos_alunos = Aluno.objects.all()
             for i in range(len(todos_alunos)):
                 for id_aluno in alunos:
-                    if todos_alunos[i].id == id_aluno:
+                    if todos_alunos[i].id == int(id_aluno):
                         selecao_de_alunos.append(todos_alunos[i])
 
-        notas = []
+        notas = {}
+        nomes_alunos = [aluno.nome for aluno in selecao_de_alunos]
+        media_alunos = []
+        maximo = 9999
         for aluno in selecao_de_alunos:
-            print("ALUNO NOTA FIRST: ", aluno.notas.first().nota)
-            notas.append(aluno.notas.first())
-        fig, ax = plt.subplots(figsize=(10, 4))
-        ax.plot(
-            [aluno.nome for aluno in selecao_de_alunos],
-            [nota.nota for nota in notas],
-            '--bo')
+            notas[f"{aluno.nome}"] = [nota.nota for nota in aluno.notas.all()]
+            temp_min = len(aluno.notas.all())
+            maximo = temp_min if temp_min < maximo else maximo
+
+        x = np.arange(maximo)
+        width = 0.25
+        multiplier = 0
+
+        fig, ax = plt.subplots(figsize=(15, 6), layout="constrained")
+        for nome, notas in notas.items():
+            offset = width * multiplier
+            rects = ax.bar(x + offset, notas, width, label=nome)
+            ax.bar_label(rects, padding=3)
+            multiplier += 1
+
+        # Comentario mantido para tentar outra abordagem
+        # ax.plot(
+        #     [n.nota 
+        #         for nota in notas
+        #         for n in nota
+        #         ],
+        #     [aluno.nome for aluno in selecao_de_alunos],
+        #     '--bo')
+
         ax.set_title('Notas de alunos')
-        ax.set_xlabel('Alunos')
         ax.set_ylabel('Notas')
+        ax.set_xticks(x + width, [f"{i + 1}° Nota" for i in range(maximo)])
+        ax.legend(loc='upper left', ncols=len(nomes_alunos))
+        ax.set_ylim(0, 10)
         
         file_io = io.BytesIO()
         fig.savefig(file_io)
         b64 = base64.b64encode(file_io.getvalue()).decode()
         context['chart'] = b64
-        print("INSTANCIADO CHART")
-        #print(context['chart'])
 
     context['alunos'] = selecao_de_alunos
-
-    print('chart' in context.keys())
 
     return render(request, template_name='graphs.html', context=context, status=200)

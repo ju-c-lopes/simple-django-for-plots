@@ -8,4 +8,13 @@ The purpose is to make some fake datas to render plots, filtering by students, g
 We're trying to use besides Django, pandas and matplotlib
 <br><br>
 Rendered matplotlib graphic in Django, following this tutorial<br>
-[Rendering MathplotLib in Django](https://spapas.github.io/2021/02/08/django-matplotlib/)
+
+[Rendering MathplotLib in Django](https://spapas.github.io/2021/02/08/django-matplotlib)
+
+<hr>
+
+#### Exemplo do grafico renderizado na aplicação Django
+
+![print da aplicação](graph.png "Gráfico")
+
+

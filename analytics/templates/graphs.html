@@ -98,17 +98,6 @@
     <form action="", method="POST">{% csrf_token %}
         <fieldset>
             <div class="primeira-coluna">
-                <script>
-                    var unselect = () => {
-                        let nonSelectedOptions = document.querySelectorAll(".alunos>option");
-                        for (let option in nonSelectedOptions) {
-                            console.log(option.select)
-                            if (!option.hasAttribute("selected") || option.value == 'all') {
-                                option.remove();
-                            }
-                        }
-                    };
-                </script>
                 <label for="alunos">
                     Selecione os alunos
                 </label>
@@ -121,13 +110,6 @@
                         {% endfor %}
                     </select>
                     <button class="button-select" type="submit"><img src="{% static './img/insert.png' %}"></button>
-                    <script>
-                        var buttonSelect = document.querySelector(".button-select");
-                        buttonSelect.addEventListener('click', () => {
-                            unselect();
-                            document.querySelectorAll(".terceira-coluna")[2].remove();
-                        })
-                    </script>
                 </div>
             </div>
 
@@ -135,24 +117,8 @@
                 <label for="notas">Notas</label>
                 <input type="range" name="notas" id="notas" min="0" max="10">
                 <span></span>
-                <script>
-                    var range = document.querySelector("input#notas");
-                    var valueNum = document.querySelector(".segunda-coluna>span");
-                    valueNum.textContent = range.value
-                    range.addEventListener('input', () => {
-                        valueNum.textContent = range.value;
-                    })
-                </script>
                 <button class="button-range" type="submit">Aplicar</button>
-                <script>
-                    var buttonRange = document.querySelector(".button-range");
-                    buttonRange.addEventListener('click', () => {
-                        unselect();
-                        var terceiraColuna = document.querySelectorAll(".terceira-coluna>div>div");
-                        terceiraColuna[0].remove();
-                        terceiraColuna[1].remove();
-                    });
-                </script>
+                
             </div>
 
             <div class="terceira-coluna">
@@ -173,6 +139,43 @@
                 <button type="submit">Aplicar</button>
             </div>
         </fieldset>
+        <script>
+            var nonSelectedOptions = document.querySelectorAll("#alunos>option");
+            var unselect = function() {
+                console.log(nonSelectedOptions);
+                for (let option in nonSelectedOptions) {
+                    console.log(option.select)
+                    if (!option.selected || option.value == 'all') {
+                        option.remove();
+                    }
+                }
+            };
+            var terceiraColuna = document.querySelectorAll(".terceira-coluna>div>div");
+        </script>
+        <script>
+            var buttonSelect = document.querySelector(".button-select");
+            buttonSelect.addEventListener('click', () => {
+                terceiraColuna[2].innerHTML = "";
+                unselect();
+            })
+        </script>
+        <script>
+            var range = document.querySelector("input#notas");
+            var valueNum = document.querySelector(".segunda-coluna>span");
+            valueNum.textContent = range.value
+            range.addEventListener('input', () => {
+                valueNum.textContent = range.value;
+            })
+        </script>
+        <script>
+            var buttonRange = document.querySelector(".button-range");
+            buttonRange.addEventListener('click', () => {
+                unselect();
+                // var terceiraColuna = document.querySelectorAll(".terceira-coluna>div>div");
+                terceiraColuna[0].remove();
+                terceiraColuna[1].remove();
+            });
+        </script>
     </form>
 </div>
 
