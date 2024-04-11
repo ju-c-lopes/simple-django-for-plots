@@ -1,54 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" media="all">
+{% endblock %}
 
 {% block title %}Consulta alunos{% endblock %}
 
 {% block content %}
-<style>
-    ul {
-        display: flex;
-        flex-direction: row;
-        margin-bottom: 30px;
-    }
-    a {
-        color: steelblue;
-        margin-left: 20px;
-        margin-bottom: 50px;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-    a:visited {
-        color: steelblue;
-        text-decoration: none;
-    }
-    li {
-        list-style: none;
-        margin-bottom: 20px;
-    }
-    h3 {
-        color: olive;
-        height: 20px;
-    }
-    h1, form, table, h3 {
-        margin-left: 20px;
-    }
-    td {
-        border: 1px #acacac dashed;
-        width: 200px;
-        height: 35px;
-        padding: 5px;
-        text-align: center;
-    }
-    .green {
-        color: green;
-        font-weight: 600;
-    }
-    .red {
-        color: red;
-        font-weight: 600;
-    }
-</style>
 <div>
     <ul>
         <li><a href="{% url 'registro' %}">Registrar aluno(a)</a></li>
@@ -91,4 +50,33 @@
     </tr>
 </table>
 {% endif %}
+<div class="aux-screen">
+    <div class="welcome">
+        <span class="close">X</span>
+        <h2>Welcome to the Django Plot Grades</h2>
+        <p>This project is a training for render <em>matplotlib graphs with django</em>, besides trainning a little bit of django too.</p>
+        <p>And now, I've also started to learn about <em>Github Actions</em> in this project.</p>
+        <p>Feel free to see my other repositories in github:</p>
+        <a href="https://github.com/ju-c-lopes" target="_blank"><img width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original-wordmark.svg" /></a>
+    </div>
+</div>
+
+<script>
+    var auxScreen = document.querySelector(".aux-screen");
+    var welcomeDiv = document.querySelector(".welcome");
+    var close = document.querySelector(".close");
+    //document.onload = 
+    window.onload = function() {
+        setTimeout(function() {
+            auxScreen.style.transition = "1s ease-in";
+            auxScreen.style.opacity= '1';
+        }, 2000)};
+    close.addEventListener('click' || 'touchstart', () => {
+        auxScreen.style.transition = "1s ease-out";
+        auxScreen.style.opacity = '0';
+        auxScreen.style.zIndex = '-1';
+        // auxScreen.style.height = '0';
+        // auxScreen.style.visibility = 'hidden';
+    })
+</script>
 {% endblock %}
