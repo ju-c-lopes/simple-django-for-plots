@@ -6,7 +6,7 @@ jobs:
     test-django-app:
         runs-on: ubuntu-latest
         strategy:
-            fail-faat: false
+            fail-fast: false
             matrix:
                 python-version: ['3.11']
         steps:
